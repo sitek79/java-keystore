@@ -1,6 +1,4 @@
-["# java-keystore" 
-"# java-keystore" 
-](https://gist.github.com/nirmalchoudhari/31f9661408039176e6a5ad951826c6c0
+https://gist.github.com/nirmalchoudhari/31f9661408039176e6a5ad951826c6c0
 https://www.planttext.com/
 https://www.baeldung.com/java-keystore
 https://habr.com/ru/post/445786/
@@ -10,6 +8,7 @@ https://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuid
 https://www.8host.com/blog/osnovy-java-keytool-rabota-s-java-keystore/
 
 https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#keystore-types
+https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/security/KeyStore.html
 
 https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-security
 https://www.educba.com/java-keystore/
@@ -36,57 +35,126 @@ openssl x509 -in /tmp/habr.com.crt -noout -ocsp_uri
 
 Отправим запрос OCSP-серверу проверить сертификат на предмет отзыва:  
 openssl ocsp -url http://ocsp.comodoca.com -issuer /tmp/intermediate.crt -cert /tmp/habr.com.crt -text
-)
 
-The following commands creates four key pairs named ca, ca1
-keytool -alias ca1 -dname CN=CA -genkeypair -keystore keystore.jks -keyalg rsa
+=======
+JavaFX. 1. Создать новый проект из архетипа Maven.
+### самый простой Архетип
+```
+mvn archetype:generate -DarchetypeGroupId=org.openjfx -DarchetypeArtifactId=javafx-archetype-simple -DarchetypeVersion=0.0.3 -DgroupId=ru.silent -DartifactId=javakeytool -Dversion=1.0.0 -Djavafx-version=17
+```
+### тот-же Архетип с обновленной версией
+```
+mvn archetype:generate -DarchetypeGroupId=org.openjfx -DarchetypeArtifactId=javafx-archetype-simple -DarchetypeVersion=0.0.6 -DgroupId=ru.silent -DartifactId=javakeytool -Dversion=1.0.0 -Djavafx-version=17.0.2
+```
+### Архетип с FXML javafx-archetype-fxml
+```
+mvn archetype:generate -DarchetypeGroupId=org.openjfx -DarchetypeArtifactId=javafx-archetype-fxml -DarchetypeVersion=0.0.6 -DgroupId=ru.silent -DartifactId=javakeytool -Dversion=1.0.0 -Djavafx-version=17.0.2
+```
+### Другие Архетипы
+https://github.com/openjfx/javafx-maven-archetypes
 
-С опцией -genkey, keytool генерирует новую пару public/private ключей, и для public ключа создает self-signed сертификат.
-keytool -genkey -keyalg rsa -keystore server.jks -dname "CN=localhost, OU=IT, O=dev64-wordpress, L=Moscow, ST=Moscow, C=RU" -storepass password -alias server -keypass password
+JavaFX. 2. Привести к нужному соответствию pom.xml файл проекта Maven .
+### pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>ru.silent</groupId>
+<artifactId>javakeytool</artifactId>
+<version>1.0.0</version>
+<packaging>jar</packaging>
 
-keytool -list -keystore server.jks
+```
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17.0.2</java.version>
+        <!--<maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>-->
+    </properties>
 
-keytool -export -keystore server.jks -alias server -storepass password -file server.cer
-keytool -import -keystore clienttrust.jks -file server.cer -storepass storepass
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.2</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <!--<release>11</release>-->
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running -->
+                        <!-- Usage: mvn clean javafx:run -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>ru.silent.App</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
 
 
-The following two commands create a chain of signed certificates; ca signs ca1 and ca1 signs ca2, all of which are self-issued:
-??? keytool -alias ca1 -certreq | keytool -alias ca -gencert -ext san=dns:ca1 | keytool -alias ca1 -importcert
 
+mvn clean javafx:run
 
-# Pre-configured options file
-preconfig.cfg
+######
+jshell --show-version
+jshell -v
+/exit
+/edit
 
-# A tiny pre-configured options file
-keytool.all = -keystore ${user.home}/ks
-keytool.list = -v
-keytool.genkeypair = -keyalg rsa
+#############
+https://openjfx.io/openjfx-docs/#maven
 
-keytool -conf preconfig.cfg -genkeypair -alias client
+### Запуск .bat файлом
+set PATH_TO_FX_MODS="path\to\javafx-jmods-19"
+set JAVA_HOME="path\to\jdkfx-19"
+mvn compile package
+java -jar shade\hellofx.jar
 
-keytool -conf preconfig.cfg -genkeypair -alias client -keyalg ec
-# файл ks хранилища появится здесь:
-C:\Users\tikhonovav
+#######
 
-
-# читаем
-keytool -keystore ~/ks -v -list
-
-
-When generating a certificate or a certificate request, the default signature algorithm (-sigalg option) is derived from the algorithm of the underlying private key to provide an appropriate level of security strength as follows:
-
-keyalg      keysize    default sigalg
-DSA         any size   SHA256withDSA
-RSA         <= 3072    SHA256withRSA
-            <= 7680    SHA384withRSA
-            > 7680     SHA512withRSA
-EC          < 384      SHA256withECDSA
-            < 512      SHA384withECDSA
-            = 512      SHA512withECDSA
-RSASSA-PSS  <= 3072    RSASSA-PSS (with SHA-256)
-            <= 7680    RSASSA-PSS (with SHA-384)
-            > 7680     RSASSA-PSS (with SHA-512)
-EdDSA       255        Ed25519
-            448        Ed448
-Ed25519     255        Ed25519
-Ed448       448        Ed448
+# Cross-platform jar
+<dependencies>
+        ...
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>19</version>
+            <classifier>win</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>19</version>
+            <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>19</version>
+            <classifier>mac</classifier>
+        </dependency>
+    </dependencies>
