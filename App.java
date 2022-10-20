@@ -1,4 +1,4 @@
-package ru.silent.andrey.javakeytool;
+package ru.silent;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,9 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class App extends Application {
+
     //private Desktop desktop = Desktop.getDesktop();
 
     //final FileChooser fileChooser = new FileChooser();
@@ -64,4 +66,5 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
+
 }
