@@ -1,8 +1,7 @@
-package ru.silent.andrey.javakeytool;
+package ru.silent;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ru.silent.andrey.javakeytool.App;
 
 import java.io.IOException;
 
