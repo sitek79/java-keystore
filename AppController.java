@@ -1,4 +1,4 @@
-package ru.silent.andrey.javakeytool;
+package ru.silent;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-import ru.silent.andrey.javakeytool.utils.ReadingTheCertificateStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,21 +51,34 @@ public class AppController {
         //readingTheCertificateStore.loadKeyStore(String.valueOf(file));
         //
         // Loading A Keystore
-        try {
             char[] keyStorePassword = "password".toCharArray();
             try(InputStream keyStoreData = new FileInputStream(file)) {
                 KeyStore ks = KeyStore.getInstance("pkcs12");
                 ks.load(keyStoreData, keyStorePassword);
+                System.out.println("Keystore is Loaded");
+                // Reading a Single Entry with password
+                char[] keyPassword = "password".toCharArray();
+                KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(keyPassword);
+                System.out.println("KeyStore Contains Alias application: " + ks.containsAlias("application"));
+                System.out.println("KeyStore Type: " + ks.getType());
+                System.out.println("Aliases stored in the KeyStore: " + ks.aliases().nextElement());
+                System.out.println("Your KeyStore contains " + ks.size() + " entries.");
+                System.out.println("KeyStore Provider: " + ks.getProvider());
+            } catch (Exception e) {
+                System.out.println("The storage didn't load");
+            }
+        // Reading all entries
+        try {
+        char[] keyPassword = "password".toCharArray();
+        KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(keyPassword);
+        KeyStore ke = KeyStore.getInstance("pkcs12");
+        System.out.println(ke.getCertificate("application"));
+        //KeyStore.Entry keyEntry = ks.getEntry("application", entryPassword);
+        //ks.getEntry("application", entryPassword);
+            KeyStore.Entry keyEntry = (KeyStore.Entry) ke.getCertificate("application");
+        System.out.println("Alias is Read");
         } catch (Exception e) {
-            System.out.println("The storage didn't load");
-        }
-        // Reading a Single Entry
-            char[] keyPassword = "password".toCharArray();
-            KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(keyPassword);
-            KeyStore ks = KeyStore.getInstance("pkcs12");
-            KeyStore.Entry keyEntry = ks.getEntry("client", entryPassword);
-        } catch (Exception e) {
-            System.out.println("Entries was not readable");
+        System.out.println("All Entries was not readable");
         }
     }
 
